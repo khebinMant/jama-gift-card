@@ -6,7 +6,7 @@ import MenuBarMobile from './MenuBarMobile';
 
 export default function Layout({ pageTitle, children }) {
     // Concatenate page title (if exists) to site title
-    let titleConcat = "Responsive Sidebar Example";
+    let titleConcat = "";
     if (pageTitle) titleConcat = pageTitle + " | " + titleConcat;
 
     // Mobile sidebar visibility state
