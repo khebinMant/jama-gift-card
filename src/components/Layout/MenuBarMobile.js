@@ -19,9 +19,6 @@ export default function MenuBarMobile({ setter }) {
             </button>
             <Link href="/" className="mx-auto">
                 {/*eslint-disable-next-line*/}
-                <h1>
-                    asd
-                </h1>
                 <img
                     src={logo.src}
                     alt="Company Logo"

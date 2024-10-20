@@ -47,7 +47,7 @@ export default function DummyPage({ title }) {
                 </div>
             </div>
 
-            <p className='text-black font-bold text-2xl mt-12'>
+            <p className='text-black text-center font-bold text-2xl'>
                 Razones para regalar&nbsp;
                 <span className="text-teal-300">
                     JAMA&nbsp;
