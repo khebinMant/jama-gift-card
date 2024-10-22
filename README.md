@@ -1,211 +1,205 @@
-Most of the design systems, such as Material UI and Ant Design have drawer-like elements that allow you to create animated sliding sidebars, but many, myself included, find these design systems to be limiting. They also introduce a ton of overhead in dependency code base.
+<br />
+<div align="center">
+  <a href="https://github.com">
+    <img src="./public/jama/jama_start.gif" alt="Logo" width="180" height="300">
+  </a>
 
-During any web development project, I am always looking for places where layers of abstraction and dependencies can be eliminated, especially when the underlying task that the layer of abstraction is producing is relatively simple. Well, good news: a responsive sidebar is one of those things! 🤗
+  <h1 style="font-size: 60px; font-weight: 700" align="center">Jama CMan</h1>
 
-In this tutorial, I'll show you how to leverage the power of Tailwind CSS and Next.js to create a simple yet elegant mobile-responsive sidebar using no other dependencies. (I am using `react-icons` for this example, but you can use whatever you like.)
+![react](https://img.shields.io/badge/React-20232A?style=for-the-badge&logo=react&logoColor=61DAFB)
+![redux](https://img.shields.io/badge/Redux-593D88?style=for-the-badge&logo=redux&logoColor=white)
+![react-router](https://img.shields.io/badge/React_Router-CA4245?style=for-the-badge&logo=react-router&logoColor=white)
+<a href="JS" target="_blank"><img src="https://img.shields.io/badge/JavaScript-F7DF1E?style=for-the-badge&logo=javascript&logoColor=black" target="_blank"></a>
+<a href="HTML" target="_blank"><img src="https://img.shields.io/badge/HTML5-E34F26?style=for-the-badge&logo=html5&logoColor=white" target="_blank"></a>
+<a href="SASS" target="_blank"><img src="https://img.shields.io/badge/SASS-FF5858?style=for-the-badge&logo=sass&logoColor=white" target="_blank"></a>
 
-***
+<h4 align="center">
 
-The first thing we'll want to do is create a folder called Layout in our components folder. This folder will house all the components required to render our sidebar, mobile menu bar and the main layout component.
+  <p align="center">https://jamac-man.netlify.app/</p>
 
-Next, let's create our sidebar component:
+</h4>
 
-```jsx
-// @/components/Layout/Sidebar.js
-import React, { useState, useEffect } from 'react'
-import Link from 'next/link'
-import { useRouter } from 'next/router'
+---
 
-import { SlHome } from 'react-icons/sl'
-import { BsInfoSquare, BsEnvelopeAt } from 'react-icons/bs'
-import { FaTshirt, FaRedhat } from 'react-icons/fa'
+  <p align="center">
+    Un clásico de toda la vida mientras esperas
+    <br />
+    <br />
+    <a href="https://github.com/khebinMant">Probar Demo</a>
+    ·
+    <a href="https://github.com/khebinMant">Reportar un error</a>
+    ·
+    <a href="https://github.com/khebinMant">Solicitar una caracteristica nueva</a>
+  </p>
+</div>
 
-import logo from '@/img/logo.svg'
+<!-- TABLE OF CONTENTS -->
 
-export default function Sidebar({ show, setter }) {
-    const router = useRouter();
+<br/>
+<details>
+  <summary>Tabla de Contenidos</summary>
+  <ol>
+    <li>
+      <a href="#-about-the-project">🎶Acerca del proyecto</a>
+      <ul>
+        <li><a href="#-built-with">🔨Contruido con</a></li>
+      </ul>
+    </li>
+    <li>
+      <a href="#-getting-started">🤸¡Empezemos!</a>
+      <ul>
+        <li><a href="#💾-installation">Instalación</a></li>
+      </ul>
+    </li>
+    <li><a href="#-usage">Usage</a></li>
+    <li><a href="#-roadmap">Roadmap</a></li>
+    <li><a href="#-contributing">Contribuir</a></li>
+    <li><a href="#-license">Licencia</a></li>
+    <li><a href="#-contact">Contacto</a></li>
+    <li><a href="#ℹ️-acknowledgments">Acknowledgments</a></li>
+  </ol>
+</details>
 
-    // Define our base class
-    const className = "bg-black w-[250px] transition-[margin-left] ease-in-out duration-500 fixed md:static top-0 bottom-0 left-0 z-40";
-    // Append class based on state of sidebar visiblity
-    const appendClass = show ? " ml-0" : " ml-[-250px] md:ml-0";
+<!-- ABOUT THE PROJECT -->
 
-    // Clickable menu items
-    const MenuItem = ({ icon, name, route }) => {
-        // Highlight menu item based on currently displayed route
-        const colorClass = router.pathname === route ? "text-white" : "text-white/50 hover:text-white";
+<hr/>
+<br/>
 
-        return (
-            <Link
-                href={route}
-                onClick={() => {
-                    setter(oldVal => !oldVal);
-                }}
-                className={`flex gap-1 [&>*]:my-auto text-md pl-6 py-3 border-b-[1px] border-b-white/10 ${colorClass}`}
-            >
-                <div className="text-xl flex [&>*]:mx-auto w-[30px]">
-                    {icon}
-                </div>
-                <div>{name}</div>
-            </Link>
-        )
-    }
+# 📱 Acerca de nuestro proyecto
 
-    // Overlay to prevent clicks in background, also serves as our close button
-    const ModalOverlay = () => (
-        <div
-            className={`flex md:hidden fixed top-0 right-0 bottom-0 left-0 bg-black/50 z-30`}
-            onClick={() => {
-                setter(oldVal => !oldVal);
-            }}
-        />
-    )
+"Jama-Cman" es un divertido juego inspirado en el clásico Pac-Man, pero con un giro creativo: en lugar de controlar al icónico personaje amarillo, ahora eres un pez en un mundo submarino lleno de desafíos.
 
-    return (
-        <>
-            <div className={`${className}${appendClass}`}>
-                <div className="p-2 flex">
-                    <Link href="/">
-                        {/*eslint-disable-next-line*/}
-                        <img src={logo.src} alt="Company Logo" width={300} height={300} />
-                    </Link>
-                </div>
-                <div className="flex flex-col">
-                    <MenuItem
-                        name="Home"
-                        route="/"
-                        icon={<SlHome />}
-                    />
-                    <MenuItem
-                        name="T-Shirts"
-                        route="/t-shirts"
-                        icon={<FaTshirt />}
-                    />
-                    <MenuItem
-                        name="Hats"
-                        route="/hats"
-                        icon={<FaRedhat />}
-                    />
-                    <MenuItem
-                        name="About Us"
-                        route="/about"
-                        icon={<BsInfoSquare />}
-                    />
-                    <MenuItem
-                        name="Contact"
-                        route="/contact"
-                        icon={<BsEnvelopeAt />}
-                    />
-                </div>
-            </div>
-            {show ? <ModalOverlay /> : <></>}
-        </>
-    )
-}
+En este juego, deberás guiar a tu pez a través de laberintos acuáticos mientras evitas a depredadores y recolectas tesoros marinos. El objetivo es navegar estratégicamente por los niveles, recoger la mayor cantidad de recompensas posibles y llegar al final sin ser atrapado. A medida que avanzas, los niveles se vuelven más complicados, con nuevos obstáculos y enemigos que pondrán a prueba tu habilidad y reflejos.
+
+Con gráficos coloridos, una jugabilidad fluida y un toque de nostalgia, "Jama-Cman" ofrece una experiencia emocionante para jugadores de todas las edades. ¿Listo para sumergirte en esta aventura submarina?
+
+### ¿Que puedes hacer?
+
+En "Jama - Cman", puedes disfrutar de una emocionante aventura submarina con muchas opciones para personalizar tu experiencia de juego:
+
+- Explorar el mundo submarino: Navega por coloridos laberintos acuáticos mientras recolectas tesoros marinos y evitas a los depredadores. 🌊🐠💎
+- Personaliza tu experiencia con diferentes modos de dificultad y entornos únicos.
+- Jugar, pausar y reanudar: Comienza una partida en cualquier momento, pausa cuando lo necesites y retoma el juego sin perder tu progreso.
+
+# 🔨 Frontend construido con
+
+- ![react](https://img.shields.io/badge/React-20232A?style=for-the-badge&logo=react&logoColor=61DAFB)
+
+- ![prime](https://img.shields.io/badge/-Prime-blue?style=for-the-badge&logo=RuboCop)
+
+- ![redux](https://img.shields.io/badge/Redux-593D88?style=for-the-badge&logo=redux&logoColor=white)
+- ![react-router](https://img.shields.io/badge/React_Router-CA4245?style=for-the-badge&logo=react-router&logoColor=white)
+- <a href="JS" target="_blank"><img src="https://img.shields.io/badge/JavaScript-F7DF1E?style=for-the-badge&logo=javascript&logoColor=black" target="_blank"></a>
+- <a href="HTML" target="_blank"><img src="https://img.shields.io/badge/HTML5-E34F26?style=for-the-badge&logo=html5&logoColor=white" target="_blank"></a>
+- <a href="SASS" target="_blank"><img src="https://img.shields.io/badge/SASS-FF5858?style=for-the-badge&logo=sass&logoColor=white" target="_blank"></a>
+- ![vercel](https://img.shields.io/badge/Vercel-000000?style=for-the-badge&logo=Vercel&logoColor=white)
+- ![jest](https://img.shields.io/badge/Jest-E34F26?style=for-the-badge&logo=jest&logoColor=white)
+
+<!-- GETTING STARTED -->
+
+# 🤸 Empecemos!
+
+Es necesario tener Git en tu computadora 😺.
+
+### 💾 🗄️ Instalación
+
+```bash
+# Clone Repository
+$ git clone https://github.com/khebinMant/jamac-man
+# Go to server folder
+$ cd jamac-man
+# Install Dependencies
+$ npm i
+# Run Aplication with create react app
+$ npm start
 ```
 
-Ok, let's break this down. This component receives two props: `show` and `setter`. These are passed from the HOC `Layout`, which we will define later. The `show` prop is a boolean variable that toggles the state of the sidebar's visibility. The `setter` prop is the function to set that state.
+<!-- USAGE EXAMPLES -->
+<br/>
 
-Next we define our base class and another variable called `appendClass`, which will be conditionally rendered based on our `show` state variable. When `show` is false, we set the left margin to -250px but we set it to 0 on medium screens or larger. We also set the transition property in our base class to a custom value of `[margin-left]`, which will cause the browser to automagically animate our sidebar as a slide animation! 😁
+# ⏩ Uso
 
-Then we define a subcomponent called `<MenuItem>` which will be used for our links. We use `next/router` to determine which link we should highlight as active. Also, we toggle the setter function when a menu item is clicked to the sidebar closes. This is required because this is a single-page app, and it would be annoying if the sidebar stayed open when you click a link.
+  <h1 style="font-size: 60px; font-weight: 700" align="center">Jugador</h1>
 
-Finally, we have `<ModalOverlay>`, which serves two purposes: 1.) it prevents clicking of anything in the background while the sidebar is open, and 2.) it serves as the close button for the sidebar. You could also add an additional visible close button as well, but I think that touching in the outside bound areas of modals on mobile UIs is a very intuitive and natural function, so I opted not to include one.
-***
+- En nuestro juego puedes registrar una información previa antes de empezar a jugar, una vez completado a divertirse!
 
-Ok, now we'll create our mobile menu bar component that will only displayed on screens smaller than the medium breakpoint:
+<!-- ROADMAP -->
+<br/>
 
-```jsx
-// @/components/Layout/MenuBarMobile.js
-import React from 'react'
-import Link from 'next/link'
-import { FiMenu as Icon } from 'react-icons/fi'
-import { FaUser } from 'react-icons/fa'
+# 💻 Live Demo
 
-import logo from '@/img/logo.svg'
+<h4 align="center">
+	🚧 Status: Building 🚀  🚧
+  <p align="center">https://jamac-man.netlify.app/</p>
 
-export default function MenuBarMobile({ setter }) {
-    return (
-        <nav className="md:hidden z-20 fixed top-0 left-0 right-0 h-[60px] bg-black flex [&>*]:my-auto px-2">
-            <button
-                className="text-4xl flex text-white"
-                onClick={() => {
-                    setter(oldVal => !oldVal);
-                }}
-            >
-                <Icon />
-            </button>
-            <Link href="/" className="mx-auto">
-                {/*eslint-disable-next-line*/}
-                <img
-                    src={logo.src}
-                    alt="Company Logo"
-                    width={50}
-                    height={50}
-                />
-            </Link>
-            <Link
-                className="text-3xl flex text-white"
-                href="/login"
-            >
-                <FaUser />
-            </Link>
-        </nav>
-    )
-}
-```
+</h4>
+<br/>
 
-This component has a fixed position at the top of the screen on mobile devices only. It serves primarily as a vehicle for our sidebar opener button. I put the login button there simply for illustration and symmetry. We need only to pass the `setter` function of our `showSidebar` state to this component.
+# 🗺 Roadmap
 
-***
+- [✔] Seleccionar Tema para nuestro juego customizados
+- [✔] Realizar una lluvia de ideas para definir la funcionalidad y objetivos de ejecución.
+- [✔] Decidir el Modelo Visual a implementar
+- [✔] Establecer la metodología de trabajo sobre Github
+- [✔] Definir la estructura de carpetas dentro de la aplicación
+- [✔] Estandarizar el nombramiento de componentes y clases dentro del HTML
+- [✔] Generar componentes con la Api seleccionada
 
-Lastly, let's create our `Layout` component that will bring it all together:
+<!-- CONTRIBUTING -->
+<br/>
 
-```jsx
-// @/components/Layout/index.js
-import React, { useState } from 'react'
-import Head from 'next/head'
-import Sidebar from './Sidebar';
-import MenuBarMobile from './MenuBarMobile';
+# 🙌 Contribuciones
 
-export default function Layout({ pageTitle, children }) {
-    // Concatenate page title (if exists) to site title
-    let titleConcat = "Responsive Sidebar Example";
-    if (pageTitle) titleConcat = pageTitle + " | " + titleConcat;
+Contribuciones son lo que hacen de la comunidad de código abierto un lugar impresionante para aprender, inspirarse y crear. Cualquier contribución que hagas es muy apreciada.
 
-    // Mobile sidebar visibility state
-    const [showSidebar, setShowSidebar] = useState(false);
+1. Forkear el Proyecto
+2. Crear la nueva rama para el feature (`git checkout -b feature/AmazingFeature`)
+3. Commit tus cambios (`git commit -m 'Add some AmazingFeature'`)
+4. Push tu rama (`git push origin feature/AmazingFeature`)
+5. Abrir un Pull Request
 
-    return (
-        <>
-            <Head>
-                <title>{titleConcat}</title>
-            </Head>
-            <div className="min-h-screen">
-                <div className="flex">
-                    <MenuBarMobile setter={setShowSidebar} />
-                    <Sidebar show={showSidebar} setter={setShowSidebar} />
-                    <div className="flex flex-col flex-grow w-screen md:w-full min-h-screen">
-                        {children}
-                    </div>
-                </div>
-            </div>
-        </>
-    )
-}
-```
+<br/>
 
-As you can see, this is where we define our `showSidebar` state variable. We then pass it to `<MenuBarMobile>` and `<Sidebar>`.
+<!-- LICENSE -->
 
-***
+# 📜 Licencia
 
-Thank you for taking the time to read my article and I hope you found it useful (or at the very least, mildly entertaining). For more great information about web dev, systems administration and cloud computing, please read the [Designly Blog](https://designly.biz/blog). Also, please leave your comments! I love to hear thoughts from my readers.
+Jama - CMan esa distribuida bajo los terminos de Apache License Version 2.0. La version completa de la licencia esta disponible en el archivo [LICENSE](LICENSE) de este repositorio. Cualquier contribucion a este proyecto sera licenciada bajo la licencia Apache License Version 2.0.
 
-Looking for a web developer? I'm available for hire! To inquire, please fill out a [contact form](https://designly.biz/contact).
+Especial agradecimiento al código Forkeado de jmcnally17
+<a href="https://github.com/jmcnally17/pacman-client-react" target="_blank">jmcnally17 PACMAN</a>
 
-***
 
-Resources for this tutorial:
+<br/>
+<!-- CONTACT -->
 
-1. [GitHub Repo](https://github.com/designly1/nextjs13-sidebar-example)
-2. [Demo Page](https://nextjs13-sidebar-example.vercel.app/)
+# 📫 Contacto
+
+<img style="border-radius: 50% !important;" src="https://avatars.githubusercontent.com/u/33032880?v=4" width="100px;" alt="photo author"/>
+
+<sub><b>Kevin Mantilla</b></sub>
+<br />
+
+[![linkedin][linkedin.js]][linkedin-url] [![github][github.js]][github3-url]
+
+<hr/>
+
+<!-- ACKNOWLEDGMENTS -->
+
+<br/>
+
+# ℹ️ Acknowledgments
+
+<table>
+    <tbody>
+<tr>
+        <td align="center"><a href="https://github.com/khebinMant"><img src="https://avatars.githubusercontent.com/u/33032880?v=4" width="100px;" alt="Kevin Mantilla"/><br /><sub><b>Kevin Mantilla</b></sub></a><br /><a href="https://github.com/khebinMant" title="Code">💻 Desarrollador Full Stack</a></td>
+        </tr>
+        <tr>
+    </tbody>
+</table>
+
+[linkedin.js]: https://img.shields.io/badge/-LinkedIn-1C82AD?logo=LinkedIn
+[linkedin-url]: https://ec.linkedin.com/in/kevin-alexander-mantilla-3238a5213?trk=people-guest_people_search-card
+[github.js]: https://img.shields.io/badge/-GitHub-181717?logo=GitHub
+[github3-url]: https://github.com/khebinMant
