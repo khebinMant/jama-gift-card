@@ -9,13 +9,19 @@ import giftImg from "@/img/gift_card.webp";
 import { useRouter } from "next/router";
 import { Carousel } from "primereact/carousel";
 import { Tag } from "primereact/tag";
+import { useEffect } from "react";
 
 export default function GifCardPage() {
   const [activeIndex, setActiveIndex] = useState(0);
   const [selectedGift, setSelectedGift] = useState(null);
   const [currentSlide, setCurrentSlide] = useState(0);
   const { register, handleSubmit, trigger } = useForm(); // Usar React Hook Form
-  const [gifts, setGifts] = useState([]);
+  const [products, setProducts] = useState([]);
+  const [selectedIndex, setSelectedIndex] = useState(null);
+
+  const handleProductSelect = (index) => {
+    setSelectedIndex(index);
+};
 
   const responsiveOptions = [
     {
@@ -59,50 +65,72 @@ const getSeverity = (gift) => {
   const items = [{ label: "JAMA Gift" }, { label: "Datos" }, { label: "Pago" }];
   const router = useRouter();
 
-  const giftOptions = [
-    {
-      id: 1,
-      imgSrc:
-        giftImg,
-    },
-    {
-      id: 2,
-      imgSrc:
-      logo,
-    },
-    {
-      id: 3,
-      imgSrc:
-        giftImg,
-    },
-    {
-      id: 4,
-      imgSrc:
-        giftImg,
-    },
-    {
-      id: 5,
-      imgSrc:
-        giftImg,
-    },
-    {
-      id: 6,
-      imgSrc:
-        giftImg,
-    },
-  ];
+  useEffect(() => {
+    setProducts([
+      {
+          id: '1000',
+          code: 'f230fh0g3',
+          name: 'Bamboo Watch',
+          description: 'Product Description',
+          image: 'bamboo-watch.jpg',
+          price: 65,
+          category: 'Accessories',
+          quantity: 24,
+          inventoryStatus: 'INSTOCK',
+          rating: 5
+      },
+      {
+          id: '1001',
+          code: 'nvklal433',
+          name: 'Black Watch',
+          description: 'Product Description',
+          image: 'black-watch.jpg',
+          price: 72,
+          category: 'Accessories',
+          quantity: 61,
+          inventoryStatus: 'INSTOCK',
+          rating: 4
+      },
+      {
+          id: '1002',
+          code: 'zz21cz3c1',
+          name: 'Blue Band',
+          description: 'Product Description',
+          image: 'blue-band.jpg',
+          price: 79,
+          category: 'Fitness',
+          quantity: 2,
+          inventoryStatus: 'LOWSTOCK',
+          rating: 3
+      },
+      {
+          id: '1003',
+          code: '244wgerg2',
+          name: 'Blue T-Shirt',
+          description: 'Product Description',
+          image: 'blue-t-shirt.jpg',
+          price: 29,
+          category: 'Clothing',
+          quantity: 25,
+          inventoryStatus: 'INSTOCK',
+          rating: 5
+      },
+      {
+          id: '1004',
+          code: 'h456wer53',
+          name: 'Bracelet',
+          description: 'Product Description',
+          image: 'bracelet.jpg',
+          price: 15,
+          category: 'Accessories',
+          quantity: 73,
+          inventoryStatus: 'INSTOCK',
+          rating: 4
+      }
+  ])
+  }, [])
+  
 
-  const handleNextSlide = () => {
-    if (currentSlide < giftOptions.length - 1) {
-      setCurrentSlide((prev) => prev + 1);
-    }
-  };
-
-  const handlePrevSlide = () => {
-    if (currentSlide > 0) {
-      setCurrentSlide((prev) => prev - 1);
-    }
-  };
 
   const onSubmit = (data) => {
     setActiveIndex(activeIndex + 1);
@@ -112,30 +140,36 @@ const getSeverity = (gift) => {
     router.push("/finish");
   };
 
-  const giftTemplate = (gift) => {
+
+  const productTemplate = (product, index) => {
+    const isSelected = index === selectedIndex;
+
     return (
-        <div className="border-1 surface-border border-round m-2 text-center py-5 px-3">
-            <div className="mb-3">
-                <img src={gift.imgSrc.src} alt={gift.name} className="shadow-2 w-48 h-auto lg:w-64" />
-                <Button
-                      disabled={!selectedGift}
-                      onClick={() => setActiveIndex(activeIndex + 1)}
-                      label="Continuar"
-                      className="px-6 py-2 text-white bg-black rounded-full hover:bg-gray-900 transition border-slate-950 mt-5"
-                   />
+        <div 
+            className={`border-1 surface-border border-round m-2 text-center py-5 px-3 flex flex-col items-center ${isSelected ? 'border-blue-500' : 'border-gray-300'}`}
+        >
+            <div className="mb-3 flex justify-center">
+                <img 
+                    src={`https://primefaces.org/cdn/primereact/images/product/${product.image}`} 
+                    alt={product.name} 
+                    className="w-auto shadow-2" 
+                />
             </div>
-            
+            <div>
+                <h4 className="mb-1">{product.name}</h4>
+                <h6 className="mt-0 mb-3">${product.price}</h6>
+                {/* <Tag value={product.inventoryStatus} severity={getSeverity(product)} /> */}
+                <div className="mt-5 flex flex-wrap gap-2 justify-center">
+                    <Button label="Comprar" className=" text-white bg-black rounded-full hover:bg-gray-900 transition border-slate-95" onClick={()=>{setActiveIndex(activeIndex+1)}}/>
+                </div>
+            </div>
         </div>
     );
 };
 
-  const onHandleSelectGift = (e) =>{
-    
-    console.log("hello")
-    console.log(e.target)
-    setSelectedGift(e.target)
-  }
-
+const onHandleSelectGift = (gift) => {
+  setSelectedGift(gift);
+};
   return (
     <Layout pageTitle={"Comprar"} className="bg-white">
       <Steps
@@ -144,93 +178,35 @@ const getSeverity = (gift) => {
         activeIndex={activeIndex}
         onSelect={(e) => setActiveIndex(e.index)}
         readOnly={false}
-        style={{ minWidth: "200px" }}
+        // style={{ minWidth: "200px" }}
       />
-      <div className="min-h-screen flex items-center justify-center  px-4">
-        <div className="flex flex-col">
-          <div className="flex flex-col items-center bg-white rounded-lg shadow-lg p-8">
+          <div>
             {activeIndex === 0 && (
-              // <>
-              //   <div className="relative">
-              //     <button
-              //       onClick={handlePrevSlide}
-              //       className={`absolute left-2 top-1/2 transform -translate-y-1/2 bg-gray-200 p-2 rounded-full z-10 ${
-              //         currentSlide === 0 ? "opacity-50 cursor-not-allowed" : ""
-              //       }`}
-              //       disabled={currentSlide === 0} // Deshabilita el botón si es el primer slide
-              //     >
-              //       {"<"}
-              //     </button>
-              //     <div className="flex overflow-hidden">
-              //       <div
-              //         className="flex transition-transform duration-500"
-              //         style={{
-              //           transform: `translateX(-${currentSlide * 100}%)`,
-              //         }}
-              //       >
-              //         {giftOptions.map((gift) => (
-              //           <div
-              //             key={gift.id}
-              //             onClick={() => setSelectedGift(gift.id)}
-              //             className={`flex-shrink-0 cursor-pointer transition-transform duration-200 hover:scale-105 
-              //               ${
-              //                 selectedGift === gift.id
-              //                   ? "ring-4 ring-teal-400"
-              //                   : "ring-1 ring-gray-300"
-              //               } 
-              //               rounded-lg ml-7`}
-              //           >
-              //             <img
-              //               src={gift.imgSrc.src}
-              //               alt={`Gift ${gift.id}`}
-              //               className="w-48 h-auto lg:w-64"
-              //             />
-              //           </div>
-              //         ))}
-              //       </div>
-              //     </div>
-              //     {/* Botón de Siguiente */}
-              //     <button
-              //       onClick={handleNextSlide}
-              //       className={`absolute right-2 top-1/2 transform -translate-y-1/2 bg-gray-200 p-2 rounded-full z-10 ${
-              //         currentSlide === giftOptions.length - 1
-              //           ? "opacity-50 cursor-not-allowed"
-              //           : ""
-              //       }`}
-              //       disabled={currentSlide === giftOptions.length - 1} // Deshabilita el botón si es el último slide
-              //     >
-              //       {">"}
-              //     </button>
-              //   </div>
-              //   <Button
-              //     disabled={!selectedGift}
-              //     onClick={() => setActiveIndex(activeIndex + 1)}
-              //     label="Continuar"
-              //     className="px-6 py-2 text-white bg-black rounded-full hover:bg-gray-900 transition border-slate-950 mt-5"
-              //     />
-              // </>
-              <>
-                <div className="card">
-                    <Carousel 
-                      value={giftOptions} 
-                      numVisible={3} 
-                      numScroll={3} 
-                      responsiveOptions={responsiveOptions} 
-                      className="custom-carousel" 
-                      circular
-                      autoplayInterval={5000} 
-                      itemTemplate={giftTemplate}
-                      onClickCapture={onHandleSelectGift}
-                    />
-
-                </div>
-              </>
+              <div class="bg-surface-card p-8 rounded-lg mb-4">
+              <Carousel 
+                value={products} 
+                numVisible={4} 
+                numScroll={3} 
+                responsiveOptions={responsiveOptions} 
+                className="custom-carousel" 
+                circular
+                autoplayInterval={3000} 
+                itemTemplate={productTemplate} 
+                onClickCapture={(e) => {
+                    // Obtener el índice del elemento clicado
+                    const index = e.target.closest('.p-carousel-item').dataset.index; // Asumiendo que estás usando el formato de índice correcto
+                    if (index !== undefined) {
+                        handleProductSelect(parseInt(index, 10)); // Actualiza el índice seleccionado
+                    }
+                }}
+            />
+              </div>
             )}
             {activeIndex === 1 && (
               <>
                 <form
                   onSubmit={handleSubmit(onSubmit)}
-                  className="flex flex-col space-y-4"
+                  className="flex flex-col space-y-4 mt-10"
                 >
                   <input
                     {...register("recipientName", { required: true })}
@@ -268,7 +244,7 @@ const getSeverity = (gift) => {
               </>
             )}
             {activeIndex === 2 && (
-              <div className="flex flex-col lg:flex-row items-center justify-between space-x-4 gap-10">
+              <div className="flex flex-col lg:flex-row items-center justify-between space-x-4 gap-10 mt-10">
                 {/* Tarjeta de crédito */}
                 <div
                   className="bg-gray-800 text-white p-6 rounded-lg shadow-md"
@@ -332,8 +308,6 @@ const getSeverity = (gift) => {
               </div>
             )}
           </div>
-        </div>
-      </div>
     </Layout>
   );
 }

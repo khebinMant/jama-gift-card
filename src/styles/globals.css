@@ -1,3 +1,89 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+@layer tailwind-base, primereact, tailwind-utilities;
+
+@layer tailwind-base {
+  @tailwind base;
+}
+
+@layer tailwind-utilities {
+  @tailwind components;
+  @tailwind utilities;
+} 
+
+:root{
+  --primary:#f78d28;
+  --primary-accent:#F67E0C;
+  --primary-selected:#FDD58B;
+  --secondary: #414042;
+  --secondary-accent: #343335;
+  --success: #00B894;
+  --success-accent: #009376;
+  --info: #00A9FF;
+  --info-accent: #0087CC;
+  --warning: #FDCB6E;
+  --warning-accent: #FCB126;
+  --danger: #FF7675;
+  --danger-accent: #FF2C2B;
+  --header-height:4rem;
+  --sidebar-width:18rem;
+  --sidebar-burguer-width:3rem;
+}
+
+html, body {
+  width: 90vw;
+  height: 100vh;
+  /* overflow: hidden; */
+  /* position: relative; */
+}
+
+.orgchart.hierarchyChart > ul > li > ul li::before {
+  border-top-color: rgb(var(--color-primary));
+}
+
+.orgchart.hierarchyChart > ul > li > ul li .oc-node::before,
+.orgchart.hierarchyChart ul li .oc-node:not(:only-child)::after {
+  background-color: rgb(var(--color-primary));
+}
+
+
+.orgchart.hierarchyChart {
+  background-image: linear-gradient(
+      90deg,
+      rgba(0, 0, 0, 0) .5%,
+      rgba(0, 0, 0, 0) 10%
+    ),
+    linear-gradient(rgba(0, 0, 0, 0) .5%, rgba(0, 0, 0, 0) 10%) !important;
+}
+
+.orgchart-container{
+  height: 500px !important;
+  border: 1px rgb(var(--color-primary)) dashed !important;
+}
+
+.orgchart ul{
+  justify-content: center;
+}
+
+@keyframes blink {
+  0% {
+    opacity: 1;
+    box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+  }
+
+  50% {
+    opacity: 0.5;
+    box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+  }
+
+  100% {
+    opacity: 1;
+    box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+  }
+}
+
+.blink {
+  animation: blink 1s infinite;
+}
