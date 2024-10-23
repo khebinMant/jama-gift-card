@@ -5,13 +5,56 @@ import { Steps } from "primereact/steps";
 import { Button } from "primereact/button";
 import { useForm } from "react-hook-form";
 import logo from "@/img/jama.png";
+import giftImg from "@/img/gift_card.webp";
 import { useRouter } from "next/router";
+import { Carousel } from "primereact/carousel";
+import { Tag } from "primereact/tag";
 
 export default function GifCardPage() {
   const [activeIndex, setActiveIndex] = useState(0);
   const [selectedGift, setSelectedGift] = useState(null);
   const [currentSlide, setCurrentSlide] = useState(0);
   const { register, handleSubmit, trigger } = useForm(); // Usar React Hook Form
+  const [gifts, setGifts] = useState([]);
+
+  const responsiveOptions = [
+    {
+        breakpoint: '1400px',
+        numVisible: 2,
+        numScroll: 1
+    },
+    {
+        breakpoint: '1199px',
+        numVisible: 3,
+        numScroll: 1
+    },
+    {
+        breakpoint: '767px',
+        numVisible: 2,
+        numScroll: 1
+    },
+    {
+        breakpoint: '575px',
+        numVisible: 1,
+        numScroll: 1
+    }
+];
+
+const getSeverity = (gift) => {
+  switch (gift.inventoryStatus) {
+      case 'INSTOCK':
+          return 'success';
+
+      case 'LOWSTOCK':
+          return 'warning';
+
+      case 'OUTOFSTOCK':
+          return 'danger';
+
+      default:
+          return null;
+  }
+};
 
   const items = [{ label: "JAMA Gift" }, { label: "Datos" }, { label: "Pago" }];
   const router = useRouter();
@@ -20,32 +63,32 @@ export default function GifCardPage() {
     {
       id: 1,
       imgSrc:
-        "https://www.uber-assets.com/image/upload/q_auto:eco,c_fill,h_384,w_576/v1605917926/assets/37/a15200-815f-416b-b2cc-b5ab193c707b/original/Uber-Gift-Card.svg",
+        giftImg,
     },
     {
       id: 2,
       imgSrc:
-        "https://www.uber-assets.com/image/upload/q_auto:eco,c_fill,h_384,w_576/v1605917926/assets/37/a15200-815f-416b-b2cc-b5ab193c707b/original/Uber-Gift-Card.svg",
+      logo,
     },
     {
       id: 3,
       imgSrc:
-        "https://www.uber-assets.com/image/upload/q_auto:eco,c_fill,h_384,w_576/v1605917926/assets/37/a15200-815f-416b-b2cc-b5ab193c707b/original/Uber-Gift-Card.svg",
+        giftImg,
     },
     {
       id: 4,
       imgSrc:
-        "https://www.uber-assets.com/image/upload/q_auto:eco,c_fill,h_384,w_576/v1605917926/assets/37/a15200-815f-416b-b2cc-b5ab193c707b/original/Uber-Gift-Card.svg",
+        giftImg,
     },
     {
       id: 5,
       imgSrc:
-        "https://www.uber-assets.com/image/upload/q_auto:eco,c_fill,h_384,w_576/v1605917926/assets/37/a15200-815f-416b-b2cc-b5ab193c707b/original/Uber-Gift-Card.svg",
+        giftImg,
     },
     {
       id: 6,
       imgSrc:
-        "https://www.uber-assets.com/image/upload/q_auto:eco,c_fill,h_384,w_576/v1605917926/assets/37/a15200-815f-416b-b2cc-b5ab193c707b/original/Uber-Gift-Card.svg",
+        giftImg,
     },
   ];
 
@@ -69,78 +112,118 @@ export default function GifCardPage() {
     router.push("/finish");
   };
 
+  const giftTemplate = (gift) => {
+    return (
+        <div className="border-1 surface-border border-round m-2 text-center py-5 px-3">
+            <div className="mb-3">
+                <img src={gift.imgSrc.src} alt={gift.name} className="shadow-2 w-48 h-auto lg:w-64" />
+                <Button
+                      disabled={!selectedGift}
+                      onClick={() => setActiveIndex(activeIndex + 1)}
+                      label="Continuar"
+                      className="px-6 py-2 text-white bg-black rounded-full hover:bg-gray-900 transition border-slate-950 mt-5"
+                   />
+            </div>
+            
+        </div>
+    );
+};
+
+  const onHandleSelectGift = (e) =>{
+    
+    console.log("hello")
+    console.log(e.target)
+    setSelectedGift(e.target)
+  }
+
   return (
-    <Layout pageTitle={""} className="bg-white">
+    <Layout pageTitle={"Comprar"} className="bg-white">
+      <Steps
+        className="mt-20"
+        model={items}
+        activeIndex={activeIndex}
+        onSelect={(e) => setActiveIndex(e.index)}
+        readOnly={false}
+        style={{ minWidth: "200px" }}
+      />
       <div className="min-h-screen flex items-center justify-center  px-4">
         <div className="flex flex-col">
-          <Steps
-            className="mb-10"
-            model={items}
-            activeIndex={activeIndex}
-            onSelect={(e) => setActiveIndex(e.index)}
-            readOnly={false}
-            style={{ minWidth: "200px" }}
-          />
           <div className="flex flex-col items-center bg-white rounded-lg shadow-lg p-8">
             {activeIndex === 0 && (
+              // <>
+              //   <div className="relative">
+              //     <button
+              //       onClick={handlePrevSlide}
+              //       className={`absolute left-2 top-1/2 transform -translate-y-1/2 bg-gray-200 p-2 rounded-full z-10 ${
+              //         currentSlide === 0 ? "opacity-50 cursor-not-allowed" : ""
+              //       }`}
+              //       disabled={currentSlide === 0} // Deshabilita el botón si es el primer slide
+              //     >
+              //       {"<"}
+              //     </button>
+              //     <div className="flex overflow-hidden">
+              //       <div
+              //         className="flex transition-transform duration-500"
+              //         style={{
+              //           transform: `translateX(-${currentSlide * 100}%)`,
+              //         }}
+              //       >
+              //         {giftOptions.map((gift) => (
+              //           <div
+              //             key={gift.id}
+              //             onClick={() => setSelectedGift(gift.id)}
+              //             className={`flex-shrink-0 cursor-pointer transition-transform duration-200 hover:scale-105 
+              //               ${
+              //                 selectedGift === gift.id
+              //                   ? "ring-4 ring-teal-400"
+              //                   : "ring-1 ring-gray-300"
+              //               } 
+              //               rounded-lg ml-7`}
+              //           >
+              //             <img
+              //               src={gift.imgSrc.src}
+              //               alt={`Gift ${gift.id}`}
+              //               className="w-48 h-auto lg:w-64"
+              //             />
+              //           </div>
+              //         ))}
+              //       </div>
+              //     </div>
+              //     {/* Botón de Siguiente */}
+              //     <button
+              //       onClick={handleNextSlide}
+              //       className={`absolute right-2 top-1/2 transform -translate-y-1/2 bg-gray-200 p-2 rounded-full z-10 ${
+              //         currentSlide === giftOptions.length - 1
+              //           ? "opacity-50 cursor-not-allowed"
+              //           : ""
+              //       }`}
+              //       disabled={currentSlide === giftOptions.length - 1} // Deshabilita el botón si es el último slide
+              //     >
+              //       {">"}
+              //     </button>
+              //   </div>
+              //   <Button
+              //     disabled={!selectedGift}
+              //     onClick={() => setActiveIndex(activeIndex + 1)}
+              //     label="Continuar"
+              //     className="px-6 py-2 text-white bg-black rounded-full hover:bg-gray-900 transition border-slate-950 mt-5"
+              //     />
+              // </>
               <>
-                <div className="relative">
-                  <button
-                    onClick={handlePrevSlide}
-                    className={`absolute left-2 top-1/2 transform -translate-y-1/2 bg-gray-200 p-2 rounded-full z-10 ${
-                      currentSlide === 0 ? "opacity-50 cursor-not-allowed" : ""
-                    }`}
-                    disabled={currentSlide === 0} // Deshabilita el botón si es el primer slide
-                  >
-                    {"<"}
-                  </button>
-                  <div className="flex overflow-hidden">
-                    <div
-                      className="flex transition-transform duration-500"
-                      style={{
-                        transform: `translateX(-${currentSlide * 100}%)`,
-                      }}
-                    >
-                      {giftOptions.map((gift) => (
-                        <div
-                          key={gift.id}
-                          onClick={() => setSelectedGift(gift.id)}
-                          className={`flex-shrink-0 cursor-pointer transition-transform duration-200 hover:scale-105 
-                            ${
-                              selectedGift === gift.id
-                                ? "ring-4 ring-teal-400"
-                                : "ring-1 ring-gray-300"
-                            } 
-                            rounded-lg ml-7`}
-                        >
-                          <img
-                            src={gift.imgSrc}
-                            alt={`Gift ${gift.id}`}
-                            className="w-48 h-auto lg:w-64"
-                          />
-                        </div>
-                      ))}
-                    </div>
-                  </div>
-                  {/* Botón de Siguiente */}
-                  <button
-                    onClick={handleNextSlide}
-                    className={`absolute right-2 top-1/2 transform -translate-y-1/2 bg-gray-200 p-2 rounded-full z-10 ${
-                      currentSlide === giftOptions.length - 1
-                        ? "opacity-50 cursor-not-allowed"
-                        : ""
-                    }`}
-                    disabled={currentSlide === giftOptions.length - 1} // Deshabilita el botón si es el último slide
-                  >
-                    {">"}
-                  </button>
+                <div className="card">
+                    <Carousel 
+                      value={giftOptions} 
+                      numVisible={3} 
+                      numScroll={3} 
+                      responsiveOptions={responsiveOptions} 
+                      className="custom-carousel" 
+                      circular
+                      autoplayInterval={5000} 
+                      itemTemplate={giftTemplate}
+                      onClickCapture={onHandleSelectGift}
+                    />
+
                 </div>
-                <Button
-                  disabled={!selectedGift}
-                  onClick={() => setActiveIndex(activeIndex + 1)}
-                  label="Continuar"
-                  className="px-6 py-2 text-white bg-black rounded-full hover:bg-gray-900 transition border-slate-950 mt-5"
-                  />
               </>
             )}
             {activeIndex === 1 && (
@@ -189,7 +272,7 @@ export default function GifCardPage() {
                 {/* Tarjeta de crédito */}
                 <div
                   className="bg-gray-800 text-white p-6 rounded-lg shadow-md"
-                  style={{ width: "400px" }}
+                  style={{ width: "350px" }}
                 >
                   <div className="flex justify-between mb-4">
                     <img src={logo.src} alt="Logo" className="h-8" />

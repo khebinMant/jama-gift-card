@@ -17,11 +17,11 @@ export default function Layout({ pageTitle, children }) {
             <Head>
                 <title>{titleConcat}</title>
             </Head>
-            <div className="min-h-screen">
+            <div className="flex-1 shrink grow w-full overflow-hidden p-2">
                 <div className="flex">
                     <MenuBarMobile setter={setShowSidebar} />
                     <Sidebar show={showSidebar} setter={setShowSidebar} />
-                    <div className="flex flex-col flex-grow w-screen md:w-full min-h-screen">
+                    <div className="flex-1 shrink grow w-full overflow-hidden p-2">
                         {children}
                     </div>
                 </div>
