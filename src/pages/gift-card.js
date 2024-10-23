@@ -1,14 +1,11 @@
 import React, { act, useState } from "react";
-import DummyPage from "@/components/DummyPage";
 import Layout from "@/components/Layout";
 import { Steps } from "primereact/steps";
 import { Button } from "primereact/button";
 import { useForm } from "react-hook-form";
 import logo from "@/img/jama.png";
-import giftImg from "@/img/gift_card.webp";
 import { useRouter } from "next/router";
 import { Carousel } from "primereact/carousel";
-import { Tag } from "primereact/tag";
 import { useEffect } from "react";
 
 export default function GifCardPage() {
@@ -70,10 +67,10 @@ const getSeverity = (gift) => {
       {
           id: '1000',
           code: 'f230fh0g3',
-          name: 'Bamboo Watch',
+          name: 'Tigribollado',
           description: 'Product Description',
-          image: 'bamboo-watch.jpg',
-          price: 65,
+          image: '1.png',
+          price: 7.99,
           category: 'Accessories',
           quantity: 24,
           inventoryStatus: 'INSTOCK',
@@ -82,10 +79,10 @@ const getSeverity = (gift) => {
       {
           id: '1001',
           code: 'nvklal433',
-          name: 'Black Watch',
+          name: 'Bielando',
           description: 'Product Description',
-          image: 'black-watch.jpg',
-          price: 72,
+          image: '2.png',
+          price: 9.99,
           category: 'Accessories',
           quantity: 61,
           inventoryStatus: 'INSTOCK',
@@ -94,10 +91,10 @@ const getSeverity = (gift) => {
       {
           id: '1002',
           code: 'zz21cz3c1',
-          name: 'Blue Band',
+          name: 'Bielando',
           description: 'Product Description',
-          image: 'blue-band.jpg',
-          price: 79,
+          image: '3.png',
+          price: 9.99,
           category: 'Fitness',
           quantity: 2,
           inventoryStatus: 'LOWSTOCK',
@@ -106,9 +103,9 @@ const getSeverity = (gift) => {
       {
           id: '1003',
           code: '244wgerg2',
-          name: 'Blue T-Shirt',
+          image: '1.png',
           description: 'Product Description',
-          image: 'blue-t-shirt.jpg',
+          image: '1.png',
           price: 29,
           category: 'Clothing',
           quantity: 25,
@@ -120,7 +117,7 @@ const getSeverity = (gift) => {
           code: 'h456wer53',
           name: 'Bracelet',
           description: 'Product Description',
-          image: 'bracelet.jpg',
+          image: '3.png',
           price: 15,
           category: 'Accessories',
           quantity: 73,
@@ -150,7 +147,7 @@ const getSeverity = (gift) => {
         >
             <div className="mb-3 flex justify-center">
                 <img 
-                    src={`https://primefaces.org/cdn/primereact/images/product/${product.image}`} 
+                    src={`/img/${product.image}`} 
                     alt={product.name} 
                     className="w-auto shadow-2" 
                 />
@@ -192,13 +189,6 @@ const onHandleSelectGift = (gift) => {
                 circular
                 autoplayInterval={3000} 
                 itemTemplate={productTemplate} 
-                onClickCapture={(e) => {
-                    // Obtener el índice del elemento clicado
-                    const index = e.target.closest('.p-carousel-item').dataset.index; // Asumiendo que estás usando el formato de índice correcto
-                    if (index !== undefined) {
-                        handleProductSelect(parseInt(index, 10)); // Actualiza el índice seleccionado
-                    }
-                }}
             />
               </div>
             )}
