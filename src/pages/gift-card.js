@@ -15,6 +15,36 @@ export default function GifCardPage() {
   const { register, handleSubmit, trigger } = useForm(); // Usar React Hook Form
   const [products, setProducts] = useState([]);
   const [selectedIndex, setSelectedIndex] = useState(null);
+  const [quantities, setQuantities] = useState({});
+  const [total, setTotal] = useState(0.00); // Asegúrate de inicializar el total como un número con dos decimales
+
+
+// Manejo del cambio de cantidad
+const handleQuantityChange = (product, currentQuantity, change) => {
+  let newQuantity = currentQuantity;
+
+  // Manejo del caso de decremento
+  if (change < 0) {
+    if (currentQuantity >= 1) {
+      newQuantity = currentQuantity - 1;
+      setTotal(total - product.price); // Reducir el total en el precio del producto
+    } else {
+      newQuantity = 0;
+
+    }
+  } 
+  // Manejo del caso de incremento
+  else if (change > 0) {
+    newQuantity = currentQuantity + 1; // Aumentar en 2
+    setTotal(total + product.price); // Aumentar el total en el precio del producto
+  }
+
+  // Actualizar cantidades
+  setQuantities({
+    ...quantities,
+    [product.id]: newQuantity, // Asegurarse de que la cantidad sea la nueva
+  });
+};
 
   const handleProductSelect = (index) => {
     setSelectedIndex(index);
@@ -41,23 +71,23 @@ export default function GifCardPage() {
         numVisible: 1,
         numScroll: 1
     }
-];
+  ];
 
-const getSeverity = (gift) => {
-  switch (gift.inventoryStatus) {
-      case 'INSTOCK':
-          return 'success';
+  const getSeverity = (gift) => {
+    switch (gift.inventoryStatus) {
+        case 'INSTOCK':
+            return 'success';
 
-      case 'LOWSTOCK':
-          return 'warning';
+        case 'LOWSTOCK':
+            return 'warning';
 
-      case 'OUTOFSTOCK':
-          return 'danger';
+        case 'OUTOFSTOCK':
+            return 'danger';
 
-      default:
-          return null;
-  }
-};
+        default:
+            return null;
+    }
+  };
 
   const items = [{ label: "JAMA Gift" }, { label: "Datos" }, { label: "Pago" }];
   const router = useRouter();
@@ -103,6 +133,7 @@ const getSeverity = (gift) => {
       {
           id: '1003',
           code: '244wgerg2',
+          name: 'Combo Chuchaqui',
           image: '1.png',
           description: 'Product Description',
           image: '4.png',
@@ -140,29 +171,49 @@ const getSeverity = (gift) => {
 
   const productTemplate = (product, index) => {
     const isSelected = index === selectedIndex;
+    const quantity = quantities[product.id] || 0;
 
     return (
-        <div 
-            className={`border-1 surface-border border-round m-2 text-center py-5 px-3 flex flex-col items-center ${isSelected ? 'border-blue-500' : 'border-gray-300'}`}
-        >
-            <div className="mb-3 flex justify-center">
-                <img 
-                    src={`/img/${product.image}`} 
-                    alt={product.name} 
-                    className="w-auto shadow-2" 
-                />
-            </div>
-            <div>
-                <h4 className="mb-1">{product.name}</h4>
-                <h6 className="mt-0 mb-3">${product.price}</h6>
-                {/* <Tag value={product.inventoryStatus} severity={getSeverity(product)} /> */}
-                <div className="mt-5 flex flex-wrap gap-2 justify-center">
-                    <Button label="Regalar" className=" text-white bg-black rounded-full hover:bg-gray-900 transition border-slate-95" onClick={()=>{setActiveIndex(activeIndex+1)}}/>
-                </div>
-            </div>
+      <div
+        className={`border-1 surface-border border-round m-2 text-center py-5 px-3 flex flex-col items-center ${
+          isSelected ? "border-blue-500" : "border-gray-300"
+        }`}
+      >
+        <div className="mb-3 flex justify-center">
+          <img
+            src={`/img/${product.image}`}
+            alt={product.name}
+            className="w-auto shadow-2"
+          />
         </div>
+        <div>
+          <h4 className="mb-1">{product.name}</h4>
+          <h6 className="mt-0 mb-3">${product.price}</h6>
+          <div className="flex flex-col items-center">
+            {/* Contador de cantidad */}
+            <div className="flex items-center space-x-2">
+              <Button
+                icon="pi pi-minus"
+                className="p-button-text"
+                onClick={() =>
+                  handleQuantityChange(product, quantities[product.id] || 0, -1) // Pasamos el valor actual de la cantidad
+                }
+              />
+              <span>{quantity}</span>
+              <Button
+                icon="pi pi-plus"
+                className="p-button-text"
+                onClick={() =>
+                  handleQuantityChange(product, quantities[product.id] || 0, 1) // Pasamos el valor actual de la cantidad
+                }
+              />
+            </div>
+
+          </div>
+        </div>
+      </div>
     );
-};
+  };
 
 const onHandleSelectGift = (gift) => {
   setSelectedGift(gift);
@@ -171,7 +222,7 @@ const onHandleSelectGift = (gift) => {
     <Layout pageTitle={"Comprar"} className="bg-white">
       <div className="w-11/12">
       <Steps
-        className="mt-20"
+        className="mt-10"
         model={items}
         activeIndex={activeIndex}
         onSelect={(e) => setActiveIndex(e.index)}
@@ -190,8 +241,26 @@ const onHandleSelectGift = (gift) => {
                 autoplayInterval={3000} 
                 itemTemplate={productTemplate} 
                 style={{ maxWidth: "100%" }} // Ajusta el ancho del carrusel
-
             />
+            <div className="mt-5 flex flex-wrap gap-2 justify-center">
+            <div className="flex flex-col text-center">
+              <h1 className="mb-5">
+              {
+                total < 0 ? 
+                <b>Total: 0</b>
+                  :
+                <b>Total: {total.toFixed(2)}</b>
+              }
+              </h1>
+                <Button
+                  label="Regalar"
+                  className="text-white bg-black rounded-full hover:bg-gray-900 transition border-slate-95"
+                  onClick={() => {
+                    setActiveIndex(activeIndex + 1);
+                  }}
+                />
+            </div>
+            </div>
               </div>
             )}
             {activeIndex === 1 && (

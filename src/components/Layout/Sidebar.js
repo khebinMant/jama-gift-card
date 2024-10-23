@@ -74,11 +74,11 @@ export default function Sidebar({ show, setter }) {
                         rel="noopener noreferrer"
                         icon={<FaFish />}
                     />
-                    <MenuItem
+                    {/* <MenuItem
                         name="Contactanos"
                         route="/contact"
                         icon={<BsEnvelopeAt />}
-                    />
+                    /> */}
                 </div>
             </div>
             {show ? <ModalOverlay /> : <></>}
