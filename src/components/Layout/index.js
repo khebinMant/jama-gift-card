@@ -20,7 +20,7 @@ export default function Layout({ pageTitle, children }) {
                 <div className="flex shrink grow w-full overflow-hidden p-2">
                     <MenuBarMobile setter={setShowSidebar} />
                     <Sidebar show={showSidebar} setter={setShowSidebar} />
-                    <div className="flex-1 shrink grow w-full">
+                    <div className="w-full">
                         {children}
                     </div>
             </div>

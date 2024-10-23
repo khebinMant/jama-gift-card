@@ -105,8 +105,8 @@ const getSeverity = (gift) => {
           code: '244wgerg2',
           image: '1.png',
           description: 'Product Description',
-          image: '1.png',
-          price: 29,
+          image: '4.png',
+          price: 7.99,
           category: 'Clothing',
           quantity: 25,
           inventoryStatus: 'INSTOCK',
@@ -157,7 +157,7 @@ const getSeverity = (gift) => {
                 <h6 className="mt-0 mb-3">${product.price}</h6>
                 {/* <Tag value={product.inventoryStatus} severity={getSeverity(product)} /> */}
                 <div className="mt-5 flex flex-wrap gap-2 justify-center">
-                    <Button label="Comprar" className=" text-white bg-black rounded-full hover:bg-gray-900 transition border-slate-95" onClick={()=>{setActiveIndex(activeIndex+1)}}/>
+                    <Button label="Regalar" className=" text-white bg-black rounded-full hover:bg-gray-900 transition border-slate-95" onClick={()=>{setActiveIndex(activeIndex+1)}}/>
                 </div>
             </div>
         </div>
@@ -169,6 +169,7 @@ const onHandleSelectGift = (gift) => {
 };
   return (
     <Layout pageTitle={"Comprar"} className="bg-white">
+      <div className="w-11/12">
       <Steps
         className="mt-20"
         model={items}
@@ -177,18 +178,19 @@ const onHandleSelectGift = (gift) => {
         readOnly={false}
         // style={{ minWidth: "200px" }}
       />
-          <div>
             {activeIndex === 0 && (
-              <div class="bg-surface-card p-8 rounded-lg mb-4">
+              <div class="bg-surface-card p-8 rounded-lg">
               <Carousel 
                 value={products} 
-                numVisible={4} 
-                numScroll={3} 
+                numVisible={3} 
+                numScroll={1} 
                 responsiveOptions={responsiveOptions} 
                 className="custom-carousel" 
                 circular
                 autoplayInterval={3000} 
                 itemTemplate={productTemplate} 
+                style={{ maxWidth: "100%" }} // Ajusta el ancho del carrusel
+
             />
               </div>
             )}

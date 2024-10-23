@@ -69,7 +69,7 @@ export default function Sidebar({ show, setter }) {
                     />
                     <MenuItem
                         name="Jama Cman"
-                        route="https://jamac-man.netlify.app/"
+                        route="https://jama-cman.netlify.app/"
                         target="_blank"
                         rel="noopener noreferrer"
                         icon={<FaFish />}
