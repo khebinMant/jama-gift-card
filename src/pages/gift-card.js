@@ -225,7 +225,10 @@ const onHandleSelectGift = (gift) => {
         className="mt-20"
         model={items}
         activeIndex={activeIndex}
-        onSelect={(e) => setActiveIndex(e.index)}
+        onSelect={(e) => {
+          if(e.index < activeIndex){
+            setActiveIndex(e.index)}}
+          }
         readOnly={false}
         style={{ minWidth: "200px" }}
       />
@@ -253,6 +256,7 @@ const onHandleSelectGift = (gift) => {
               }
               </h1>
                 <Button
+                  disabled={total<=0}
                   label="Regalar"
                   className="text-white bg-black rounded-full hover:bg-gray-900 transition border-slate-95"
                   onClick={() => {
