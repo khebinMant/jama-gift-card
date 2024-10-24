@@ -222,12 +222,12 @@ const onHandleSelectGift = (gift) => {
     <Layout pageTitle={"Comprar"} className="bg-white">
       <div className="w-11/12">
       <Steps
-        className="mt-10"
+        className="mt-20"
         model={items}
         activeIndex={activeIndex}
         onSelect={(e) => setActiveIndex(e.index)}
         readOnly={false}
-        // style={{ minWidth: "200px" }}
+        style={{ minWidth: "200px" }}
       />
             {activeIndex === 0 && (
               <div class="bg-surface-card p-8 rounded-lg">
