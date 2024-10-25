@@ -12,7 +12,7 @@ export default function GifCardPage() {
   const [activeIndex, setActiveIndex] = useState(0);
   const [selectedGift, setSelectedGift] = useState(null);
   const [currentSlide, setCurrentSlide] = useState(0);
-  const { register, handleSubmit, trigger } = useForm(); // Usar React Hook Form
+  const { register, handleSubmit, trigger, getValues } = useForm(); // Usar React Hook Form
   const [products, setProducts] = useState([]);
   const [selectedIndex, setSelectedIndex] = useState(null);
   const [quantities, setQuantities] = useState({});
@@ -165,7 +165,31 @@ const handleQuantityChange = (product, currentQuantity, change) => {
   };
 
   const handlePayment = () => {
-    router.push("/finish");
+    const to = getValues("recipientEmail"); 
+    const message = getValues("message"); 
+    const gifter = getValues("gifterName"); 
+
+    console.log(to)
+    fetch('/.netlify/functions/sendEmail', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({
+        to:to,
+        message:message,
+        gifter:gifter,
+      }),
+    })
+      .then((response) => response.json())
+      .then((data) => {
+        console.log('Correo enviado:', data);
+        // router.push("/finish");
+      })
+      .catch((error) => {
+        console.error('Error:', error);
+        // router.push("/finish");
+      });
   };
 
 
@@ -233,7 +257,7 @@ const onHandleSelectGift = (gift) => {
         style={{ minWidth: "200px" }}
       />
             {activeIndex === 0 && (
-              <div class="bg-surface-card p-8 rounded-lg">
+              <div className="bg-surface-card p-8 rounded-lg">
               <Carousel 
                 value={products} 
                 numVisible={3} 
@@ -274,18 +298,18 @@ const onHandleSelectGift = (gift) => {
                   className="flex flex-col space-y-4 mt-10"
                 >
                   <input
-                    {...register("recipientName", { required: true })}
-                    placeholder="Nombres del destinatario"
+                    {...register("gifterName", { required: true })}
+                    placeholder="Tu nombre: "
                     className="border p-2 rounded"
                   />
                   <input
-                    {...register("recipienLastName", { required: true })}
-                    placeholder="Apellidos del destinatario"
+                    {...register("recipientName", { required: true })}
+                    placeholder="¿A quien se lo dedicas?: "
                     className="border p-2 rounded"
                   />
                   <input
                     {...register("recipientPhone", { required: true })}
-                    placeholder="Teléfono del destinatario"
+                    placeholder={`Teléfono del destinatario: `}
                     className="border p-2 rounded"
                     type="number"
                   />
@@ -297,7 +321,7 @@ const onHandleSelectGift = (gift) => {
                   />
                   <textarea
                     {...register("message", { required: true })}
-                    placeholder="Mensaje"
+                    placeholder="Mensaje de tu regalo"
                     className="border p-2 rounded h-24"
                   />
                   <Button
