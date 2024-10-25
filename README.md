@@ -15,7 +15,7 @@
 
 <h4 align="center">
 
-  <p align="center">[https://jama-cman.netlify.app](https://jama-gift-card.netlify.app/)/</p>
+  <p align="center">https://jama-cman.netlify.app/</p>
 
 </h4>
 
