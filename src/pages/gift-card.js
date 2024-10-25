@@ -12,37 +12,32 @@ export default function GifCardPage() {
   const [activeIndex, setActiveIndex] = useState(0);
   const [selectedGift, setSelectedGift] = useState(null);
   const [currentSlide, setCurrentSlide] = useState(0);
-  const { register, handleSubmit, trigger, getValues } = useForm(); // Usar React Hook Form
+  const { register, handleSubmit, trigger, getValues } = useForm(); 
   const [products, setProducts] = useState([]);
   const [selectedIndex, setSelectedIndex] = useState(null);
   const [quantities, setQuantities] = useState({});
-  const [total, setTotal] = useState(0.00); // Asegúrate de inicializar el total como un número con dos decimales
+  const [total, setTotal] = useState(0.00);
 
-
-// Manejo del cambio de cantidad
 const handleQuantityChange = (product, currentQuantity, change) => {
   let newQuantity = currentQuantity;
 
-  // Manejo del caso de decremento
   if (change < 0) {
     if (currentQuantity >= 1) {
       newQuantity = currentQuantity - 1;
-      setTotal(total - product.price); // Reducir el total en el precio del producto
+      setTotal(total - product.price); 
     } else {
       newQuantity = 0;
 
     }
   } 
-  // Manejo del caso de incremento
   else if (change > 0) {
-    newQuantity = currentQuantity + 1; // Aumentar en 2
-    setTotal(total + product.price); // Aumentar el total en el precio del producto
+    newQuantity = currentQuantity + 1; 
+    setTotal(total + product.price); 
   }
 
-  // Actualizar cantidades
   setQuantities({
     ...quantities,
-    [product.id]: newQuantity, // Asegurarse de que la cantidad sea la nueva
+    [product.id]: newQuantity,
   });
 };
 
@@ -292,11 +287,11 @@ const onHandleSelectGift = (gift) => {
               </div>
             )}
             {activeIndex === 1 && (
-              <>
+              <div className="flex flex-col lg:flex-row w-full mt-5">
                 <form
                   onSubmit={handleSubmit(onSubmit)}
-                  className="flex flex-col space-y-4 mt-10"
-                >
+                  className="flex flex-col space-y-4 mt-10 w-full lg:w-1/2"
+                  >
                   <input
                     {...register("gifterName", { required: true })}
                     placeholder="Tu nombre: "
@@ -330,38 +325,57 @@ const onHandleSelectGift = (gift) => {
                     className="px-6 py-2 text-white bg-black rounded-full hover:bg-gray-900 transition border-slate-950"
                     />
                 </form>
-              </>
-            )}
-            {activeIndex === 2 && (
-              <div className="flex flex-col lg:flex-row items-center justify-between space-x-4 gap-10 mt-10">
-                {/* Tarjeta de crédito */}
-                <div
-                  className="bg-gray-800 text-white p-6 rounded-lg shadow-md"
-                  style={{ width: "350px" }}
-                >
-                  <div className="flex justify-between mb-4">
-                    <img src={logo.src} alt="Logo" className="h-8" />
-                    <div className="text-sm">
-                      <p>VALID THRU</p>
-                      <p className="font-bold">12/25</p>
-                    </div>
-                  </div>
-                  <div className="text-xl font-bold mb-2">
-                    1234 5678 9012 3456
-                  </div>
-                  <div className="flex justify-between">
-                    <p className="text-sm">JOHN DOE</p>
-                    <p className="text-sm">123</p>
-                  </div>
-                  <div className="mt-4 text-sm text-center">
-                    <p>Authorized Signature</p>
+                <div className="bg-surface-card p-4 mb-6 rounded-lg w-full lg:w-1/2 mt-5">
+                  <h2 className="text-lg font-bold mb-2">Resumen de Compras</h2>
+                  <ul className="space-y-2 mt-5">
+                    {products.map((product) => {
+                      const quantity = quantities[product.id] || 0;
+                      return (
+                        quantity > 0 && (
+                          <li key={product.id} className="flex justify-between">
+                            <span>{product.name} (x{quantity})</span>
+                            <span>${(product.price * quantity).toFixed(2)}</span>
+                          </li>
+                        )
+                      );
+                    })}
+                  </ul>
+                  <div className="flex justify-between mt-4 font-bold absolute right-36 mt-12">
+                    <span>Total:</span>
+                    <span>${total.toFixed(2)}</span>
                   </div>
                 </div>
 
-                {/* Formulario de datos */}
-                <form
-                  onSubmit={handleSubmit(onSubmit)}
-                  className="flex flex-col space-y-4 w-72 lg:w-1/2"
+              </div>
+            )}
+            {activeIndex === 2 && (
+              <div className="flex flex-col lg:flex-row w-full mt-5 justify-center items-center">
+              <div className="bg-surface-card p-4 mb-6 rounded-lg w-full lg:w-1/2 mt-5 flex flex-col justify-center items-center">
+                  <div
+                    className="bg-gray-800 text-white p-6 rounded-lg shadow-md"
+                    style={{ width: "350px" }}
+                  >
+                    <div className="flex justify-between mb-4">
+                      <img src={logo.src} alt="Logo" className="h-8" />
+                      <div className="text-sm">
+                        <p>VALID THRU</p>
+                        <p className="font-bold">12/25</p>
+                      </div>
+                    </div>
+                    <div className="text-xl font-bold mb-2">
+                      1234 5678 9012 3456
+                    </div>
+                    <div className="flex justify-between">
+                      <p className="text-sm">JOHN DOE</p>
+                      <p className="text-sm">123</p>
+                    </div>
+                    <div className="mt-4 text-sm text-center">
+                      <p>Authorized Signature</p>
+                    </div>
+                  </div>
+                  <form
+                  onSubmit={handleSubmit(handlePayment)}
+                  className="flex flex-col space-y-4 mt-10 w-full lg:w-1/2"
                 >
                   <input
                     {...register("cardNumber", { required: true })}
@@ -389,11 +403,31 @@ const onHandleSelectGift = (gift) => {
                   </div>
                   <Button
                     label="Pagar"
-                    type="button" // Cambiar a 'button' para evitar el comportamiento por defecto de envío
-                    onClick={handlePayment}
+                    type="submit"
                     className="px-6 py-2 text-white bg-black rounded-full hover:bg-gray-900 transition border-slate-950"
                   />{" "}
                 </form>
+                </div>
+                <div className="bg-surface-card p-4 mb-6 rounded-lg w-full lg:w-1/2 mt-5">
+                  <h2 className="text-lg font-bold mb-2">Resumen de Compras</h2>
+                  <ul className="space-y-2 mt-5">
+                    {products.map((product) => {
+                      const quantity = quantities[product.id] || 0;
+                      return (
+                        quantity > 0 && (
+                          <li key={product.id} className="flex justify-between">
+                            <span>{product.name} (x{quantity})</span>
+                            <span>${(product.price * quantity).toFixed(2)}</span>
+                          </li>
+                        )
+                      );
+                    })}
+                  </ul>
+                  <div className="flex justify-between mt-4 font-bold">
+                    <span>Total:</span>
+                    <span>${total.toFixed(2)}</span>
+                  </div>
+                </div>
               </div>
             )}
           </div>
