@@ -184,11 +184,11 @@ const handleQuantityChange = (product, currentQuantity, change) => {
       .then((response) => response.json())
       .then((data) => {
         console.log('Correo enviado:', data);
-        // router.push("/finish");
+        router.push("/finish");
       })
       .catch((error) => {
         console.error('Error:', error);
-        // router.push("/finish");
+        router.push("/finish");
       });
   };
 
