@@ -5,6 +5,7 @@ import { FiMenu as Icon } from 'react-icons/fi'
 import { FaUser } from 'react-icons/fa'
 
 import logo from '@/img/jama.png'
+import userThumb from '@/img/user.png'
 
 export default function MenuBarMobile({ setter }) {
     return (
@@ -24,6 +25,16 @@ export default function MenuBarMobile({ setter }) {
                     alt="Company Logo"
                     width={50}
                     height={50}
+                />
+            </Link>
+            <Link href="/" className="mx-auto">
+                {/*eslint-disable-next-line*/}
+                <img
+                    className='absolute right-5 top-4'
+                    src={userThumb.src}
+                    alt="Company Logo"
+                    width={40}
+                    height={40}
                 />
             </Link>
         </nav>
